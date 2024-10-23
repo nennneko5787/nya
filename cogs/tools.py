@@ -82,7 +82,7 @@ class ToolsCog(commands.Cog):
     @app_commands.command(name="users", description="登録されているユーザーの数を表示")
     @app_commands.allowed_contexts(guilds=True, dms=False)
     @app_commands.allowed_installs(guilds=True, users=False)
-    async def authCountCommand(self, interaction: discord.Interaction):
+    async def usersCommand(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
         users = await Database.pool.fetchrow("SELECT * FROM users")
         embed = discord.Embed(
