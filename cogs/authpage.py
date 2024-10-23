@@ -56,7 +56,7 @@ class AuthPageCog(commands.Cog):
                 raise HTTPException(status_code=response.status_code)
             userData = response.json()
             user = await guild.fetch_member(int(userData["id"]))
-            await user.add_role(role, reason="認証に成功したため。")
+            await user.add_roles(role, reason="認証に成功したため。")
             refreshToken = accessTokenResponse["refresh_token"]
             expiresAt = datetime.now() + timedelta(
                 seconds=accessTokenResponse["expires_in"]
