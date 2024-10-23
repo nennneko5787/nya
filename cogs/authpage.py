@@ -22,6 +22,12 @@ class AuthPageCog(commands.Cog):
 
     async def discordCallback(self, request: Request, code: str, state: int):
         guild = self.bot.get_guild(state)
+        row = await Database.pool.fetchrow(
+            "SELECT * FROM guilds WHERE id = $1", guild.id
+        )
+        if not row:
+            raise HTTPException(status_code=403)
+        role = guild.get_role(row["role_id"]
         response = await self.client.post(
             "https://discord.com/api/oauth2/token",
             headers={"Content-Type": "application/x-www-form-urlencoded"},
