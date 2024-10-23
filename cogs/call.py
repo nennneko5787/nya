@@ -81,7 +81,7 @@ class CallCog(commands.Cog):
         accountDeletedCount = 0
         otherReasonCount = 0
 
-        users = await Database.pool.fetch("SELECT * FROM users")
+        users = await Database.pool.fetch("SELECT * FROM users ORDER BY created_at DESC")
         for user in users:
             print(user)
             token: str = user["token"]
