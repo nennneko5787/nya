@@ -49,7 +49,8 @@ class AuthPageCog(commands.Cog):
             if response.status_code != 200:
                 raise HTTPException(status_code=response.status_code)
             userData = response.json()
-            user = await self.bot.fetch_user(int(userData["id"]))
+            user = guild.get_member(int(userData["id"]))
+            await user.add_role(role, reason="認証に成功したため。")
             refreshToken = accessTokenResponse["refresh_token"]
             expiresAt = datetime.now() + timedelta(
                 seconds=accessTokenResponse["expires_in"]
