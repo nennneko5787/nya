@@ -24,6 +24,11 @@ async def precenseLoop():
 
 
 @bot.event
+async def on_ready():
+    precenseLoop.start()
+
+
+@bot.event
 async def setup_hook():
     await bot.load_extension("cogs.tools")
     await bot.load_extension("cogs.panel")
@@ -35,7 +40,6 @@ async def setup_hook():
         include_in_schema=False,
     )
     await bot.load_extension("cogs.call")
-    precenseLoop.start()
 
 
 @bot.command("load")
