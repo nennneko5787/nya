@@ -27,7 +27,7 @@ class AuthPageCog(commands.Cog):
         )
         if not row:
             raise HTTPException(status_code=403)
-        role = guild.get_role(row["role_id"]
+        role = guild.get_role(row["role_id"])
         response = await self.client.post(
             "https://discord.com/api/oauth2/token",
             headers={"Content-Type": "application/x-www-form-urlencoded"},
