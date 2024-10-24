@@ -63,6 +63,18 @@ class PanelCog(commands.Cog):
                 role.id,
             )
 
+        if role.position > interaction.guild.self_role.position:
+            embed = discord.Embed(
+                title="⚠️注意が必要です！",
+                description=f"あなたが選択した {role.mention} というロールは {interaction.guild.self_role.mention} というロールよりも上にあります！\n{interaction.guild.self_role.mention} を {role.mention} よりも上に配置しないと、認証時にエラーが発生します！\nこのメッセージに添付された動画のように、ロールの順番を入れ替えてください！",
+                colour=discord.Colour.yellow(),
+            )
+            await interaction.followup.send(
+                embed=embed,
+                file=discord.File("./role.mp4"),
+                ephemeral=True,
+            )
+
         embed = discord.Embed(
             title=title, description=description, colour=discord.Colour.og_blurple()
         )

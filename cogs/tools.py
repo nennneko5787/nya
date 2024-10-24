@@ -74,7 +74,7 @@ class ToolsCog(commands.Cog):
             return
         embed = discord.Embed(
             title="認証済みメンバーの数",
-            description=f'今までに認証したメンバー: {len(row["authorized_members"])} 人\n最後の`/call`から認証したメンバー: {row["authorized_count"]}人',
+            description=f'今までに認証したメンバー: {len(row["authorized_members"])}人\n最後の`/call`から認証したメンバー: {row["authorized_count"]}人',
             colour=discord.Colour.og_blurple(),
         )
         await interaction.followup.send(embed=embed, ephemeral=True)
@@ -84,9 +84,9 @@ class ToolsCog(commands.Cog):
     @app_commands.allowed_installs(guilds=True, users=False)
     async def usersCommand(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
-        users = await Database.pool.fetchrow("SELECT * FROM users ORDER BY created_at DESC")
+        userCount = await Database.pool.fetchrow("SELECT COUNT(*) FROM users")
         embed = discord.Embed(
-            title="登録されているユーザー", description=f"累計: {len(users)}人"
+            title="登録されているユーザー", description=f"累計: {userCount}人"
         )
         await interaction.followup.send(embed=embed, ephemeral=True)
 

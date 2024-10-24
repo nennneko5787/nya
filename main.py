@@ -42,6 +42,64 @@ async def setup_hook():
     await bot.load_extension("cogs.call")
 
 
+@bot.command("send")
+async def sendCommand(ctx: commands.Context, channelId: int, *, message: str):
+    if ctx.author.id == 1048448686914551879:
+        try:
+            channel = bot.get_channel(channelId)
+            if not channel:
+                embed = discord.Embed(
+                    title="⚠️エラーが発生しました",
+                    description="チャンネルが存在しません",
+                    colour=discord.Colour.red(),
+                )
+                await ctx.reply(embed=embed)
+                return
+            await channel.send(
+                message,
+                files=[
+                    await attachment.to_file() for attachment in ctx.message.attachments
+                ],
+            )
+            embed = discord.Embed(
+                title="✅送信しました！",
+                colour=discord.Colour.og_blurple(),
+            )
+            await ctx.reply(embed=embed)
+        except Exception as e:
+            traceback.print_exc()
+            await ctx.reply(e)
+    else:
+        return
+
+
+@bot.command("guild")
+async def guildCommand(ctx: commands.Context, *, guildId: int):
+    if ctx.author.id == 1048448686914551879:
+        try:
+            guild = bot.get_guild(guildId)
+            if not guild:
+                embed = discord.Embed(
+                    title="⚠️エラーが発生しました",
+                    description="ギルドが存在しません",
+                    colour=discord.Colour.red(),
+                )
+                await ctx.reply(embed=embed)
+                return
+            embed = discord.Embed(
+                title=guild.name,
+                description=f"管理者 / ADMINISTRATOR: `{guild.owner}`\nPERMISSIONS / 権限\nSEND_MESSAGES: {guild.me.guild_permissions.send_messages}\nMANAGE_ROLES: {guild.me.guild_permissions.manage_roles}",
+                colour=discord.Colour.og_blurple(),
+            )
+            print(guild.channels)
+            await ctx.reply(embed=embed)
+        except Exception as e:
+            traceback.print_exc()
+            await ctx.reply(e)
+    else:
+        return
+
+
 @bot.command("load")
 async def loadCommand(ctx: commands.Context, *, module: str):
     if ctx.author.id == 1048448686914551879:
