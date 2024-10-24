@@ -72,6 +72,16 @@ class PanelCog(commands.Cog):
             )
         if not channel:
             channel = interaction.channel
+
+        if not channel.permissions_for(interaction.guild.me).send_messages:
+            embed = discord.Embed(
+                title="⚠️エラーが発生しました",
+                description="<@1298239893608337440> に`メッセージを送信`する権限がありません。",
+                colour=discord.Colour.red(),
+            )
+            await interaction.followup.send(ephemeral=True, embed=embed)
+            return
+
         oauth2Url = os.getenv("oauth2_url")
         view = discord.ui.View()
         view.add_item(
