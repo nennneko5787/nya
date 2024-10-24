@@ -84,7 +84,7 @@ class ToolsCog(commands.Cog):
     @app_commands.allowed_installs(guilds=True, users=False)
     async def usersCommand(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
-        userCount = await Database.pool.fetchrow("SELECT COUNT(*) FROM users")
+        userCount = await Database.pool.fetchval("SELECT COUNT(*) FROM users")
         embed = discord.Embed(
             title="登録されているユーザー", description=f"累計: {userCount}人"
         )
