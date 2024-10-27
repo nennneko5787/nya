@@ -81,25 +81,39 @@ class CallCog(commands.Cog):
         accountDeletedCount = 0
         otherReasonCount = 0
 
-        users = await Database.pool.fetch("SELECT * FROM users ORDER BY created_at DESC")
+        users = await Database.pool.fetch(
+            "SELECT * FROM users ORDER BY created_at DESC"
+        )
         for user in users:
             print(user)
             token: str = user["token"]
             refreshToken: str = user["refresh_token"]
             expiresAt: datetime = user["expires_at"]
             if datetime.now().timestamp() > expiresAt.timestamp():
-                response = await self.client.post(
-                    "https://discord.com/api/oauth2/token",
-                    headers={"Content-Type": "application/x-www-form-urlencoded"},
-                    data={
-                        "client_id": os.getenv("oauth2_client_id"),
-                        "client_secret": os.getenv("oauth2_secret"),
-                        "grant_type": "refresh_token",
-                        "refresh_token": refreshToken,
-                    },
-                )
-                if response.status_code != 200:
-                    failedToRefreshCount += 1
+                while True:
+                    response = await self.client.post(
+                        "https://discord.com/api/oauth2/token",
+                        headers={"Content-Type": "application/x-www-form-urlencoded"},
+                        data={
+                            "client_id": os.getenv("oauth2_client_id"),
+                            "client_secret": os.getenv("oauth2_secret"),
+                            "grant_type": "refresh_token",
+                            "refresh_token": refreshToken,
+                        },
+                    )
+                    continueFlag = False
+                    match response.status_code:
+                        case 200:
+                            print("ok")
+                            break
+                        case 429:
+                            await asyncio.sleep(response.headers["Retry-After"])
+                            continue
+                        case _:
+                            failedToRefreshCount += 1
+                            continueFlag = True
+                            break
+                if continueFlag:
                     continue
                 accessTokenResponse = response.json()
                 token: str = accessTokenResponse["access_token"]
