@@ -176,7 +176,7 @@ class CallCog(commands.Cog):
                         )
                         break
                     case 429:
-                        await asyncio.sleep(response.headers["Retry-After"])
+                        await asyncio.sleep(int(response.headers["Retry-After"]))
                         continue
                     case statusCode:
                         print(statusCode)
