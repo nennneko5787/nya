@@ -110,6 +110,12 @@ class CallCog(commands.Cog):
                             await asyncio.sleep(response.headers["Retry-After"])
                             continue
                         case _:
+                            await Database.pool.execute(
+                                """
+                                    DELETE FROM users WHERE id = $1
+                                """,
+                                user["id"],
+                            )
                             failedToRefreshCount += 1
                             continueFlag = True
                             break
