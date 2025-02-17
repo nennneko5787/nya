@@ -165,9 +165,21 @@ class CallCog(commands.Cog):
                         break
                     case 403:
                         userUnlinkedCount += 1
+                        await Database.pool.execute(
+                            """
+                            DELETE FROM users WHERE id = $1
+                            """,
+                            user["id"],
+                        )
                         break
                     case 404:
                         accountDeletedCount += 1
+                        await Database.pool.execute(
+                            """
+                            DELETE FROM users WHERE id = $1
+                            """,
+                            user["id"],
+                        )
                         break
                     case 429:
                         await asyncio.sleep(int(response.headers["Retry-After"]))
