@@ -20,13 +20,18 @@ class CallCog(commands.Cog):
         self.client = AsyncClient()
 
     @app_commands.command(name="call", description='認証した人"全員"を追加')
+    @app_commands.rename(
+        ephemeral="他のユーザーに非表示にする",
+        reset="無効なトークンをデータベースから削除",
+    )
     @app_commands.describe(
         ephemeral="他のユーザーに追加していることを報告するかどうか。",
+        reset="無効なユーザーのトークンをデータベースから削除するかどうか。",
     )
     @app_commands.allowed_contexts(guilds=True, dms=False)
     @app_commands.allowed_installs(guilds=True, users=False)
     async def callCommand(
-        self, interaction: discord.Interaction, ephemeral: bool = True
+        self, interaction: discord.Interaction, reset: bool = False, ephemeral: bool = True
     ):
         if not interaction.user.guild_permissions.administrator:
             embed = discord.Embed(
@@ -60,10 +65,11 @@ class CallCog(commands.Cog):
         await Database.pool.execute(
             """
                 UPDATE guilds
-                SET authorized_count = authorized_count - 10
+                SET authorized_count = $2
                 WHERE id = $1
             """,
             interaction.guild.id,
+            0,
         )
 
         embed = discord.Embed(
