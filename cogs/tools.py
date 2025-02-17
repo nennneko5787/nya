@@ -90,6 +90,12 @@ class ToolsCog(commands.Cog):
         )
         await interaction.followup.send(embed=embed, ephemeral=True)
 
+    @app_commands.command(name="serverid", description="サーバーIDを確認")
+    @app_commands.allowed_contexts(guilds=True, dms=False)
+    @app_commands.allowed_installs(guilds=True, users=False)
+    async def serverIdCommand(self, interaction: discord.Interaction):
+        await interaction.response.send_message(str(interaction.guild.id), ephemeral=True)
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ToolsCog(bot))
