@@ -42,7 +42,7 @@ class BuyCallPermWithPayPayModal(discord.ui.Modal, title="call権限をPayPayで
             return
 
         linkInfo = await Database.paypay.link_check(self.moneyUrl.value)
-        if linkInfo.amount < self.price:
+        if int(linkInfo.amount) < self.price:
             embed = discord.Embed(
                 title="⚠️エラーが発生しました",
                 description="送金リンクの金額が足りません！",
@@ -107,7 +107,7 @@ class BuyCallPermWithKyashModal(discord.ui.Modal, title="call権限をKyashで�
             return
 
         linkInfo = await Database.kyash.link_check(self.moneyUrl.value)
-        if Database.kyash.link_amount < self.price:
+        if int(Database.kyash.link_amount) < self.price:
             embed = discord.Embed(
                 title="⚠️エラーが発生しました",
                 description="送金リンクの金額が足りません！",
