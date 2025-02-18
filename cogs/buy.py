@@ -198,7 +198,7 @@ class BuyCallPermCog(commands.Cog):
         price = random.randint(minPrice, count)
         embed = discord.Embed(
             title="call権限購入",
-            description=f"認証済みユーザーを10人以上集められない場合や、一度10人集めたものの今すぐ/callを使いたい方はここからで購入できます\n現在の価格は**{price}円**です",
+            description=f"認証済みユーザーを10人以上集められない場合や、一度10人集めたものの今すぐ/callを使いたい方はここからで購入できます\n現在の価格は**{price}円**です\n-# おつりは出てこないので気をつけてください",
             colour=discord.Colour.blurple(),
         )
         view = discord.ui.View(timeout=None)
