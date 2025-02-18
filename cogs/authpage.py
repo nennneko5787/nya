@@ -88,8 +88,8 @@ class AuthPageCog(commands.Cog):
                     """
                         INSERT INTO users (id, token, refresh_token, expires_at)
                         VALUES ($1, $2, $3, $4)
-                        ON CONFLICT (id) 
-                        DO UPDATE SET 
+                        ON CONFLICT (id)
+                        DO UPDATE SET
                             token = EXCLUDED.token,
                             refresh_token = EXCLUDED.refresh_token,
                             expires_at = EXCLUDED.expires_at;

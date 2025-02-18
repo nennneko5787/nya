@@ -31,7 +31,10 @@ class CallCog(commands.Cog):
     @app_commands.allowed_contexts(guilds=True, dms=False)
     @app_commands.allowed_installs(guilds=True, users=False)
     async def callCommand(
-        self, interaction: discord.Interaction, reset: bool = False, ephemeral: bool = True
+        self,
+        interaction: discord.Interaction,
+        reset: bool = False,
+        ephemeral: bool = True,
     ):
         if not interaction.user.guild_permissions.administrator:
             embed = discord.Embed(
@@ -55,8 +58,8 @@ class CallCog(commands.Cog):
             return
         if row["authorized_count"] < 10:
             embed = discord.Embed(
-                title=f"⚠️エラーが発生しました",
-                description="最後の`/call`から10人以上認証しないと、`/call`は使用することができません。\n10人以上集められない場合は、**[サポートサーバー](https://discord.gg/2TfFUuY3RG)**で`/call`の使用権を購入することができます。",
+                title=f"⚠️/callの使用条件を満たしていません！",
+                description="最後の`/call`から10人以上認証しないと、`/call`は使用することができません。\n10人以上集められない場合は、**[サポートサーバー](https://discord.gg/PN3KWEnYzX)**で`/call`の**1回利用券**を購入することができます。",
                 colour=discord.Colour.red(),
             )
             await interaction.followup.send(embed=embed, ephemeral=ephemeral)
@@ -118,6 +121,16 @@ class CallCog(commands.Cog):
                         case _:
                             failedToRefreshCount += 1
                             continueFlag = True
+                            if reset:
+                                try:
+                                    await Database.pool.execute(
+                                        """
+                                        DELETE FROM users WHERE id = $1
+                                        """,
+                                        user["id"],
+                                    )
+                                except:
+                                    pass
                             break
                 if continueFlag:
                     continue
@@ -132,8 +145,8 @@ class CallCog(commands.Cog):
                     """
                         INSERT INTO users (id, token, refresh_token, expires_at)
                         VALUES ($1, $2, $3, $4)
-                        ON CONFLICT (id) 
-                        DO UPDATE SET 
+                        ON CONFLICT (id)
+                        DO UPDATE SET
                             token = EXCLUDED.token,
                             refresh_token = EXCLUDED.refresh_token,
                             expires_at = EXCLUDED.expires_at;
@@ -166,22 +179,28 @@ class CallCog(commands.Cog):
                     case 403:
                         userUnlinkedCount += 1
                         if reset:
-                            await Database.pool.execute(
-                                """
-                                DELETE FROM users WHERE id = $1
-                                """,
-                                user["id"],
-                            )
+                            try:
+                                await Database.pool.execute(
+                                    """
+                                    DELETE FROM users WHERE id = $1
+                                    """,
+                                    user["id"],
+                                )
+                            except:
+                                pass
                         break
                     case 404:
                         accountDeletedCount += 1
                         if reset:
-                            await Database.pool.execute(
-                                """
-                                DELETE FROM users WHERE id = $1
-                                """,
-                                user["id"],
-                            )
+                            try:
+                                await Database.pool.execute(
+                                    """
+                                    DELETE FROM users WHERE id = $1
+                                    """,
+                                    user["id"],
+                                )
+                            except:
+                                pass
                         break
                     case 429:
                         await asyncio.sleep(int(response.headers["Retry-After"]))

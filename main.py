@@ -40,6 +40,7 @@ async def setup_hook():
         include_in_schema=False,
     )
     await bot.load_extension("cogs.call")
+    await bot.load_extension("cogs.buy")
 
 
 @bot.command("send")
