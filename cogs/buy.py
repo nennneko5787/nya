@@ -78,6 +78,7 @@ class BuyCallPermWithPayPayModal(discord.ui.Modal, title="call権限をPayPayで
             colour=discord.Colour.green(),
         )
         await interaction.followup.send(embed=embed, ephemeral=True)
+        await self.buyCallPermMessage(message=interaction.message)
 
 
 class BuyCallPermWithKyashModal(discord.ui.Modal, title="call権限をKyashで購入"):
@@ -141,6 +142,7 @@ class BuyCallPermWithKyashModal(discord.ui.Modal, title="call権限をKyashで�
             colour=discord.Colour.green(),
         )
         await interaction.followup.send(embed=embed, ephemeral=True)
+        await self.buyCallPermMessage(message=interaction.message)
 
 
 class BuyCallPermCog(commands.Cog):
