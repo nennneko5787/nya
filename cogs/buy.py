@@ -184,6 +184,7 @@ class BuyCallPermCog(commands.Cog):
                     BuyCallPermWithKyashModal(int(customFields[1]))
                 )
             case "reload":
+                await interaction.response.defer(ephemeral=True)
                 await self.buyCallPermMessage(message=interaction.message)
             case _:
                 pass
