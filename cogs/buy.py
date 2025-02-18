@@ -174,7 +174,7 @@ class BuyCallPermCog(commands.Cog):
     async def onButtonClick(self, interaction: discord.Interaction):
         customId = interaction.data["custom_id"]
         customFields = customId.split(",")
-        match customFields:
+        match customFields[0]:
             case "paypay":
                 await interaction.response.send_modal(
                     BuyCallPermWithPayPayModal(int(customFields[1]))
