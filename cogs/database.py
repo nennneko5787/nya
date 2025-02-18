@@ -47,7 +47,10 @@ class Database:
         data["paypay"]["deviceUUID"] = paypay.device_uuid
         data["paypay"]["clientUUID"] = paypay.client_uuid
         data["paypay"]["accessToken"] = paypay.access_token
-        data["paypay"]["refreshToken"] = paypay.refresh_token
+        try:
+            data["paypay"]["refreshToken"] = paypay.refresh_token
+        except:
+            pass
 
         with open("./credentials.json", "r+") as f:
             json.dump(data, f)
