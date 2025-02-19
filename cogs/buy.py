@@ -57,7 +57,7 @@ class BuyCallPermWithPayPayModal(discord.ui.Modal, title="call権限をPayPayで
                 SET authorized_count = authorized_count + 10
                 WHERE id = $1
             """,
-            self.serverIdStr.value,
+            int(self.serverIdStr.value),
         )
 
         try:
