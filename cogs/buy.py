@@ -30,7 +30,7 @@ class BuyCallPermWithPayPayModal(discord.ui.Modal, title="call権限をPayPayで
     async def on_submit(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
         serverExists = await Database.pool.fetchval(
-            "SELECT EXISTS (SELECT 1 FROM guilds WHERE id = $1)", self.serverIdStr.value
+            "SELECT EXISTS (SELECT 1 FROM guilds WHERE id = $1)", int(self.serverIdStr.value)
         )
         if not serverExists:
             embed = discord.Embed(
@@ -96,7 +96,7 @@ class BuyCallPermWithKyashModal(discord.ui.Modal, title="call権限をKyashで�
     async def on_submit(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
         serverExists = await Database.pool.fetchval(
-            "SELECT EXISTS (SELECT 1 FROM guilds WHERE id = $1)", self.serverIdStr.value
+            "SELECT EXISTS (SELECT 1 FROM guilds WHERE id = $1)", int(self.serverIdStr.value)
         )
         if not serverExists:
             embed = discord.Embed(
