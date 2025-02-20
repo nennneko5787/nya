@@ -127,7 +127,7 @@ class BuyCallPermWithKyashModal(discord.ui.Modal, title="call権限をKyashで�
         )
 
         try:
-            await Database.kyash.link_recieve(self.moneyUrl.value, link_info=linkInfo)
+            await Database.kyash.link_recieve(self.moneyUrl.value, link_uuid=Database.kyash.link_uuid)
         except Exception as e:
             embed = discord.Embed(
                 title="⚠️エラーが発生しました",
