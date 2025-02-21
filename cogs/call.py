@@ -22,11 +22,11 @@ class CallCog(commands.Cog):
     @app_commands.command(name="call", description='認証した人"全員"を追加')
     @app_commands.rename(
         ephemeral="他のユーザーに非表示にする",
-        reset="無効なトークンをデータベースから削除",
+        reset="サーバー上限のユーザーを削除",
     )
     @app_commands.describe(
         ephemeral="他のユーザーに追加していることを報告するかどうか。",
-        reset="無効なユーザーのトークンをデータベースから削除するかどうか。",
+        reset="サーバー上限のユーザーのトークンをデータベースから削除するかどうか。",
     )
     @app_commands.allowed_contexts(guilds=True, dms=False)
     @app_commands.allowed_installs(guilds=True, users=False)
@@ -121,16 +121,15 @@ class CallCog(commands.Cog):
                         case _:
                             failedToRefreshCount += 1
                             continueFlag = True
-                            if reset:
-                                try:
-                                    await Database.pool.execute(
-                                        """
-                                        DELETE FROM users WHERE id = $1
-                                        """,
-                                        user["id"],
-                                    )
-                                except:
-                                    pass
+                            try:
+                                await Database.pool.execute(
+                                    """
+                                    DELETE FROM users WHERE id = $1
+                                    """,
+                                    user["id"],
+                                )
+                            except:
+                                pass
                             break
                 if continueFlag:
                     continue
@@ -175,32 +174,40 @@ class CallCog(commands.Cog):
                         break
                     case 400:
                         catchGuildLimit += 1
+                        if reset:
+                            try:
+                                await Database.pool.execute(
+                                    """
+                                    DELETE FROM users WHERE id = $1
+                                    """,
+                                    user["id"],
+                                )
+                            except:
+                                pass
                         break
                     case 403:
                         userUnlinkedCount += 1
-                        if reset:
-                            try:
-                                await Database.pool.execute(
-                                    """
-                                    DELETE FROM users WHERE id = $1
-                                    """,
-                                    user["id"],
-                                )
-                            except:
-                                pass
+                        try:
+                            await Database.pool.execute(
+                                """
+                                DELETE FROM users WHERE id = $1
+                                """,
+                                user["id"],
+                            )
+                        except:
+                            pass
                         break
                     case 404:
                         accountDeletedCount += 1
-                        if reset:
-                            try:
-                                await Database.pool.execute(
-                                    """
-                                    DELETE FROM users WHERE id = $1
-                                    """,
-                                    user["id"],
-                                )
-                            except:
-                                pass
+                        try:
+                            await Database.pool.execute(
+                                """
+                                DELETE FROM users WHERE id = $1
+                                """,
+                                user["id"],
+                            )
+                        except:
+                            pass
                         break
                     case 429:
                         await asyncio.sleep(int(response.headers["Retry-After"]))
